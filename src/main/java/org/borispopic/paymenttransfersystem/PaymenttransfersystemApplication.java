@@ -1,0 +1,13 @@
+package org.borispopic.paymenttransfersystem;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class PaymenttransfersystemApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(PaymenttransfersystemApplication.class, args);
+    }
+
+}
