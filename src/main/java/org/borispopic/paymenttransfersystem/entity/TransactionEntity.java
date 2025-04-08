@@ -1,14 +1,13 @@
 package org.borispopic.paymenttransfersystem.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.borispopic.paymenttransfersystem.enums.EntryType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,6 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class TransactionEntity {
     @Id
+    @GeneratedValue
     private UUID id;
     private BigDecimal amount;
     private String sourceAccountId;

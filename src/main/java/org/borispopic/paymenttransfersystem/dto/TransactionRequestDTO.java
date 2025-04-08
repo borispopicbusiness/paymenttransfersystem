@@ -1,11 +1,15 @@
 package org.borispopic.paymenttransfersystem.dto;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Data;
 
+import java.math.BigDecimal;
+
+@Data
+@Builder
 public class TransactionRequestDTO {
     private BigDecimal amount;
-    private UUID sourceAccountId;
-    private UUID destinationAccountId;
+    private String sourceAccountId;
+    private String destinationAccountId;
     private String comment;
 }

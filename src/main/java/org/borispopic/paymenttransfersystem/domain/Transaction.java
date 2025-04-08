@@ -2,7 +2,6 @@ package org.borispopic.paymenttransfersystem.domain;
 
 import lombok.Builder;
 import lombok.Data;
-import org.borispopic.paymenttransfersystem.enums.EntryType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

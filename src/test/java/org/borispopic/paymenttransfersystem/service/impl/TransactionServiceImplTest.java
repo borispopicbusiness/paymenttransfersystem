@@ -4,6 +4,9 @@ import org.borispopic.paymenttransfersystem.domain.Transaction;
 import org.borispopic.paymenttransfersystem.entity.AccountEntity;
 import org.borispopic.paymenttransfersystem.entity.TransactionEntity;
 import org.borispopic.paymenttransfersystem.enums.AccountType;
+import org.borispopic.paymenttransfersystem.exception.DestinationAccountNotFoundException;
+import org.borispopic.paymenttransfersystem.exception.InsufficientFundsException;
+import org.borispopic.paymenttransfersystem.exception.SourceAccountNotFoundException;
 import org.borispopic.paymenttransfersystem.mapper.TransactionsMapper;
 import org.borispopic.paymenttransfersystem.mapper.TransactionsMapperImpl;
 import org.borispopic.paymenttransfersystem.repository.AccountRepository;
@@ -149,21 +152,7 @@ class TransactionServiceImplTest {
                 .destinationAccountId("IBAN_TEST_ACCOUNT_002")
                 .build();
 
-        AccountEntity testAccountEntity = AccountEntity.builder()
-                .accountNumber("IBAN_TEST_ACCOUNT_001")
-                .balance(BigDecimal.valueOf(90.00))
-                .registered(LocalDate.now())
-                .owner("Boris Popic")
-                .build();
-
-        assertEquals(Optional.empty(), transactionService.performTransaction(testTransaction));
-        Mockito.verify(accountRepository, Mockito.times(1)).findById(Mockito.any());
-
-        Mockito.reset(accountRepository);
-        Mockito.when(accountRepository.findById(Mockito.any())).thenReturn(Optional.of(testAccountEntity));
-
-        assertEquals(Optional.empty(), transactionService.performTransaction(testTransaction));
-
+        assertThrows(SourceAccountNotFoundException.class, () -> transactionService.performTransaction(testTransaction));
         Mockito.verify(accountRepository, Mockito.times(1)).findById(Mockito.any());
     }
 
@@ -194,8 +183,36 @@ class TransactionServiceImplTest {
                 .destinationAccountId("IBAN_TEST_ACCOUNT_002")
                 .build();
 
-        assertEquals(Optional.empty(), transactionService.performTransaction(testTransaction));
+        assertThrows(DestinationAccountNotFoundException.class, () -> transactionService.performTransaction(testTransaction));
         Mockito.verify(accountRepository, Mockito.times(2)).findById(Mockito.any());
+    }
+
+    @Test
+    void shouldThrowInsufficientFundsExceptionWhenBalanceIsInsufficient() {
+        transactionsMapper = new TransactionsMapperImpl();
+        transactionService = new TransactionServiceImpl(accountRepository, transactionRepository, ledgerRepository, transactionsMapper);
+
+        Mockito.reset(transactionRepository, ledgerRepository, accountRepository);
+
+        AccountEntity testAccountEntity = AccountEntity.builder()
+                .accountNumber("IBAN_TEST_ACCOUNT_001")
+                .balance(BigDecimal.valueOf(90.00))
+                .registered(LocalDate.now())
+                .owner("Boris Popic")
+                .build();
+
+        Mockito.when(accountRepository.findById("IBAN_TEST_ACCOUNT_001"))
+                .thenReturn(Optional.of(testAccountEntity));
+
+        Transaction testTransaction = Transaction.builder()
+                .sourceAccountId("IBAN_TEST_ACCOUNT_001")
+                .amount(BigDecimal.valueOf(100.50))
+                .comment("Test transaction")
+                .destinationAccountId("IBAN_TEST_ACCOUNT_002")
+                .build();
+
+        assertThrows(InsufficientFundsException.class, () -> transactionService.performTransaction(testTransaction));
+        Mockito.verify(accountRepository, Mockito.times(1)).findById(Mockito.any());
     }
 
     @Test

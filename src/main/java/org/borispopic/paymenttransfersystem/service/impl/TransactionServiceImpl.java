@@ -5,6 +5,9 @@ import org.borispopic.paymenttransfersystem.domain.Transaction;
 import org.borispopic.paymenttransfersystem.entity.LedgerEntity;
 import org.borispopic.paymenttransfersystem.entity.TransactionEntity;
 import org.borispopic.paymenttransfersystem.enums.EntryType;
+import org.borispopic.paymenttransfersystem.exception.InsufficientFundsException;
+import org.borispopic.paymenttransfersystem.exception.SourceAccountNotFoundException;
+import org.borispopic.paymenttransfersystem.exception.DestinationAccountNotFoundException;
 import org.borispopic.paymenttransfersystem.exception.InvalidTransactionParametersException;
 import org.borispopic.paymenttransfersystem.mapper.TransactionsMapper;
 import org.borispopic.paymenttransfersystem.repository.AccountRepository;
@@ -48,17 +51,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Optional<Transaction> performTransaction(Transaction transaction) {
         //validate the transaction request
-        try {
-            this.validateTransaction(transaction);
-        } catch (InvalidTransactionParametersException e) {
-            return Optional.empty();
-        }
+        this.validateTransaction(transaction);
 
         var currentBalance = accountRepository.findById(transaction.getSourceAccountId()).get().getBalance();
         accountRepository.updateAccountBalanceNative(transaction.getSourceAccountId(), currentBalance.subtract(transaction.getAmount()));
 
         var currentBalanceDestination = accountRepository.findById(transaction.getDestinationAccountId()).get().getBalance();
-        accountRepository.updateAccountBalanceNative(transaction.getDestinationAccountId(), currentBalance.add(transaction.getAmount()));
+        accountRepository.updateAccountBalanceNative(transaction.getDestinationAccountId(), currentBalanceDestination.add(transaction.getAmount()));
 
         transaction.setEntryDate(LocalDate.now());
 
@@ -89,8 +88,8 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Optional<Transaction> getTransaction(UUID transactionId) {
-        var transactionEntity = transactionRepository.findById(transactionId);
-        return transactionEntity.map(transactionsMapper::mapTransactionEntityToTransaction);
+        return transactionRepository.findById(transactionId)
+                .map(transactionsMapper::mapTransactionEntityToTransaction);
     }
 
     @Override
@@ -114,10 +113,8 @@ public class TransactionServiceImpl implements TransactionService {
                 .map(transactionsMapper::mapTransactionEntityToTransaction)
                 .toList();
 
-        List<Transaction> combined = Stream.concat(listWithSource.stream(), listWithDestination.stream())
+        return Stream.concat(listWithSource.stream(), listWithDestination.stream())
                 .collect(Collectors.toList());
-
-        return combined;
     }
 
     @Override
@@ -128,17 +125,14 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void validateTransaction(Transaction transaction) throws InvalidTransactionParametersException {
-        var sourceAccount = accountRepository.findById(transaction.getSourceAccountId());
+        var sourceAccount = accountRepository.findById(transaction.getSourceAccountId())
+                .orElseThrow(SourceAccountNotFoundException::new);
 
-        if( sourceAccount.isEmpty() )
-            throw new InvalidTransactionParametersException("Source account not found");
+        if (sourceAccount.getBalance().compareTo(transaction.getAmount()) < 0) {
+            throw new InsufficientFundsException();
+        }
 
-        if( sourceAccount.get().getBalance().compareTo(transaction.getAmount()) == -1 )
-            throw new InvalidTransactionParametersException("Source account balance out of range");
-
-        var destinationAccount = accountRepository.findById(transaction.getDestinationAccountId());
-
-        if( destinationAccount.isEmpty() )
-            throw new InvalidTransactionParametersException("Destination account not found");
+        accountRepository.findById(transaction.getDestinationAccountId())
+                .orElseThrow(DestinationAccountNotFoundException::new);
     }
 }
