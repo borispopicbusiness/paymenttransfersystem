@@ -36,17 +36,30 @@ The application uses a simple yet robust relational schema consisting of the fol
 ## 📄 Code References & Logic Highlights
 
 - [`PaymentControllerImpl.java` - Payment Controller](https://github.com/borispopicbusiness/paymenttransfersystem/blob/4ca4a46a7ddafa0112c8e410ac8cca3d634c2f63/src/main/java/org/borispopic/paymenttransfersystem/controller/impl/PaymentControllerImpl.java#L51-L57)  
-  Handles the `/api/v1/payment/execute` endpoint. Delegates the payment transfer request to the service layer and returns the appropriate HTTP response.
+  Handles the `/api/v1/payment/execute` endpoint. Delegates the payment transfer request to the service layer and
+  returns the appropriate HTTP response.
 
-- [`GlobalExceptionHandler.java `- Exceptions Handling](https://github.com/borispopicbusiness/paymenttransfersystem/blob/4ca4a46a7ddafa0112c8e410ac8cca3d634c2f63/src/main/java/org/borispopic/paymenttransfersystem/exception/handler/GlobalExceptionHandler.java#L14-L36)  
-  Centralized exception handler that catches business rule violations (`BusinessException`) and returns meaningful error messages with proper status codes.
+- [`PaymentExceptionHandler.java `- Exceptions Handling](https://github.com/borispopicbusiness/paymenttransfersystem/blob/1fe1744e51e290d5d9063d5b315810ec1d715c1c/src/main/java/org/borispopic/paymenttransfersystem/exception/handler/PaymentExceptionHandler.java#L14-L36)  
+  Centralized exception handler that catches business rule violations (`BusinessException`) and returns meaningful
+  error messages with proper status codes.
 
 - [`TransactionServiceImpl.java` – Payment Logic](https://github.com/borispopicbusiness/paymenttransfersystem/blob/4ca4a46a7ddafa0112c8e410ac8cca3d634c2f63/src/main/java/org/borispopic/paymenttransfersystem/service/impl/TransactionServiceImpl.java#L50-L87)  
-  Core logic for executing a payment: checks IBAN format, verifies balance, deducts and credits accounts, saves the transaction, and logs the operation.
+  Core logic for executing a payment: checks IBAN format, verifies balance, deducts and credits accounts, saves
+  the transaction, and logs the operation.
 
 - [`TransactionServiceImpl.java` – IBAN Validation](https://github.com/borispopicbusiness/paymenttransfersystem/blob/4ca4a46a7ddafa0112c8e410ac8cca3d634c2f63/src/main/java/org/borispopic/paymenttransfersystem/service/impl/TransactionServiceImpl.java#L129-L139)  
   Utility method that validates whether an account number conforms to the IBAN structure using a regular expression.
 
+- [`TransactionServiceImplTest.java`- Mock test](https://github.com/borispopicbusiness/paymenttransfersystem/blob/1fe1744e51e290d5d9063d5b315810ec1d715c1c/src/test/java/org/borispopic/paymenttransfersystem/service/impl/TransactionServiceImplTest.java#L32-L323)
+  Thorough unit test suite that leverages mocks to isolate and validate the behavior of the TransactionServiceImpl.
+  It verifies core payment execution logic including IBAN validation, account balance checks, proper debit/credit 
+  operations, and exception handling. This test ensures the service logic functions correctly in isolation from 
+  external systems such as the database layer.
+
+- [`TransactionServiceImplIntegrationTest` - Integration test](https://github.com/borispopicbusiness/paymenttransfersystem/blob/1fe1744e51e290d5d9063d5b315810ec1d715c1c/src/test/java/org/borispopic/paymenttransfersystem/service/impl/TransactionServiceImplIntegrationTest.java#L29-L133)
+  Integration test that verifies the full payment transaction flow in a real application context, including database interactions.
+  It ensures that a valid payment request results in account balance updates and transaction persistence, while also checking that 
+  invalid inputs (e.g., malformed IBANs or insufficient balance) are handled gracefully according to the centralized PaymentExceptionHandler.
 
 ## 🚀 Getting Started
 
