@@ -14,8 +14,7 @@ This project is developed using Java 17 and tested on Java 21. It uses PostgreSQ
 Important:
 
 **Before you begin, please note that the database is initially empty—no tables or data are present out of the box.**
-**You will need to run the provided scripts or follow the instructions below to populate the database with the required**
-**schema and execute the first transactions.**
+**You will need to follow the instructions below to populate the database with the required schema and execute the first transactions.**
 
 ## 🗄️ Database Schema Overview
 The application uses a simple yet robust relational schema consisting of the following core tables:
