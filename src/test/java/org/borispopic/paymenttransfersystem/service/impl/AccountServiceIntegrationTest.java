@@ -1,5 +1,6 @@
 package org.borispopic.paymenttransfersystem.service.impl;
 
+import org.borispopic.paymenttransfersystem.config.TestSecurityConfig;
 import org.borispopic.paymenttransfersystem.domain.Account;
 import org.borispopic.paymenttransfersystem.entity.AccountEntity;
 import org.borispopic.paymenttransfersystem.enums.AccountType;
@@ -7,7 +8,9 @@ import org.borispopic.paymenttransfersystem.repository.AccountRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -18,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
+@Import(TestSecurityConfig.class)
 public class AccountServiceIntegrationTest {
 
     @Autowired
