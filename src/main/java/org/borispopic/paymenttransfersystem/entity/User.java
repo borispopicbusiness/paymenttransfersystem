@@ -24,21 +24,22 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String username;
     private String password;
     private String email;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @JoinColumn(name = "refresh_token_id")
     private RefreshToken refreshToken;
 
     private boolean enabled = true;
+    @Column(name = "account_non_expired")
     private boolean accountNonExpired = true;
+    @Column(name = "account_non_locked")
     private boolean accountNonLocked = true;
+    @Column(name = "credentials_non_expired")
     private boolean credentialsNonExpired = true;
 
     @Override
