@@ -1,4 +1,4 @@
-package org.borispopic.paymenttransfersystem.dto;
+package org.borispopic.paymenttransfersystem.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    private String username;
-    private String email;
-    private String password;
+public class TokenRefreshResponseDTO {
+    private String accessToken;
+    private String refreshToken;
 }

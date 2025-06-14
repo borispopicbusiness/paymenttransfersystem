@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
 

@@ -1,7 +1,7 @@
-package org.borispopic.paymenttransfersystem.service.impl;
+package org.borispopic.paymenttransfersystem.service.impl.security;
 
 import lombok.RequiredArgsConstructor;
-import org.borispopic.paymenttransfersystem.repository.UserRepository;
+import org.borispopic.paymenttransfersystem.repository.security.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

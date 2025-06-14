@@ -1,4 +1,4 @@
-package org.borispopic.paymenttransfersystem.dto;
+package org.borispopic.paymenttransfersystem.dto.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenRefreshRequest {
+public class AuthenticationResponseDTO {
+    private String token;
     private String refreshToken;
 }

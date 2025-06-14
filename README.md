@@ -89,11 +89,36 @@ To run the tests, run the following the command:
 
 ### 🧾 Create Accounts
 
-You can create accounts by sending POST requests to the `/api/v1/accounts/create` endpoint.
+#### Authorization/Registration
+
+    curl -X POST http://localhost:8080/api/v1/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"test","password":"password123","email":"test@example.com"}'
+
+#### Authentication/Login
+
+    curl -X POST http://localhost:8080/api/v1/auth/authenticate \
+    -H "Content-Type: application/json" \
+    -d '{"username":"test","password":"password123"}'
+
+#### Refresh Token
+
+    curl -X POST http://localhost:8080/api/v1/auth/refresh-token \
+    -H "Content-Type: application/json" \
+    -d '{"refreshToken":"7b125e71-9363-4128-8d43-15f2ec16560b"}'
+
+#### Use token
+
+    curl -X GET http://localhost:8080/api/v1/accounts/all \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzQ5ODk4ODcyLCJleHAiOjE3NDk5MDI0NzJ9.rI6YmGa9AgxjPDSExsgNAOdWLotegBoSfr3N_dcjndE"
 
 #### 🧑‍💼 Example: Create Account 1 (John Doe)
 
+You can create accounts by sending POST requests to the `/api/v1/accounts/create` endpoint.
+
     curl -X POST "http://localhost:8080/api/v1/accounts/create" -H "Content-Type: application/json" -d '{
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzQ5ODk4ODcyLCJleHAiOjE3NDk5MDI0NzJ9.rI6YmGa9AgxjPDSExsgNAOdWLotegBoSfr3N_dcjndE"
     "accountNumber": "GB29NWBK60161331926819",
     "balance": 1000.00,
     "currency": "GBP",
@@ -105,7 +130,9 @@ You can create accounts by sending POST requests to the `/api/v1/accounts/create
 
 #### 👩‍💼 Example: Create Account 2 (Jane Doe)
 
-    curl -X POST "http://localhost:8080/api/v1/accounts/create" -H "Content-Type: application/json" -d '{
+    curl -X POST "http://localhost:8080/api/v1/accounts/create" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzQ5ODk4ODcyLCJleHAiOjE3NDk5MDI0NzJ9.rI6YmGa9AgxjPDSExsgNAOdWLotegBoSfr3N_dcjndE"
+    -d '{
     "accountNumber": "DE89370400440532013000",
     "balance": 1500.00,
     "currency": "GBP",
@@ -120,7 +147,9 @@ To transfer funds between accounts, send a POST request to `/api/v1/payment/exec
 
 #### 🔄 Example: Transfer Payment
 
-    curl -X POST "http://localhost:8080/api/v1/payment/execute" -H "Content-Type: application/json" -d '{
+    curl -X POST "http://localhost:8080/api/v1/payment/execute" -H "Content-Type: application/json" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzQ5ODk4ODcyLCJleHAiOjE3NDk5MDI0NzJ9.rI6YmGa9AgxjPDSExsgNAOdWLotegBoSfr3N_dcjndE"
+    -d '{
     "amount": 250.00,
     "sourceAccountId": "DE89370400440532013000",
     "destinationAccountId": "GB29NWBK60161331926819",

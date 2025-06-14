@@ -1,12 +1,11 @@
-package org.borispopic.paymenttransfersystem.service.impl;
+package org.borispopic.paymenttransfersystem.service.impl.security;
 
 import lombok.RequiredArgsConstructor;
-import org.borispopic.paymenttransfersystem.dto.RegisterRequest;
-import org.borispopic.paymenttransfersystem.entity.User;
+import org.borispopic.paymenttransfersystem.dto.security.RegisterRequestDTO;
+import org.borispopic.paymenttransfersystem.entity.security.UserEntity;
 import org.borispopic.paymenttransfersystem.enums.Role;
-import org.borispopic.paymenttransfersystem.repository.UserRepository;
+import org.borispopic.paymenttransfersystem.repository.security.UserRepository;
 import org.borispopic.paymenttransfersystem.service.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,12 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User register(RegisterRequest request) {
+    public UserEntity register(RegisterRequestDTO request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username is already taken!");
         }
@@ -28,7 +26,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email is already in use!");
         }
 
-        User user = User.builder()
+        UserEntity user = UserEntity.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -39,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
