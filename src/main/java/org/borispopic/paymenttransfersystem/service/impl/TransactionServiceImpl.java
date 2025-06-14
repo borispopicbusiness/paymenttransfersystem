@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final LedgerRepository ledgerRepository;

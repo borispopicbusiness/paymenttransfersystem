@@ -1,5 +1,6 @@
 package org.borispopic.paymenttransfersystem.service.impl;
 
+import org.borispopic.paymenttransfersystem.config.TestSecurityConfig;
 import org.borispopic.paymenttransfersystem.domain.Transaction;
 import org.borispopic.paymenttransfersystem.entity.AccountEntity;
 import org.borispopic.paymenttransfersystem.entity.LedgerEntity;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
+@Import(TestSecurityConfig.class)
 @SpringBootTest
 public class TransactionServiceImplIntegrationTest {
 
